@@ -60,10 +60,16 @@ export class TaskService {
 
     collection.forEach(item => {
       const task = new Task(
-        item.id,
-        item.attributes.title,
-        item.attributes.description,
-        item.attributes.done
+        item.uuid,
+        item.createdat,
+        item.updatedat,
+        item.resolvedat,
+        item.postponedat,
+        item.postponedtime,
+        item.title,
+        item.description,
+        item.priority,
+        item.status
       );
 
       tasks.push(task);
@@ -74,10 +80,16 @@ export class TaskService {
 
   private responseToTask(response: Response): Task {
     return new Task(
-      response.json().data.id,
-      response.json().data.attributes.title,
-      response.json().data.attributes.description,
-      response.json().data.attributes.done
+      response.json().data.uuid,
+      response.json().data.createdat,
+      response.json().data.updatedat,
+      response.json().data.resolvedat,
+      response.json().data.postponedat,
+      response.json().data.postponedtime,
+      response.json().data.title,
+      response.json().data.description,
+      response.json().data.priority,
+      response.json().data.status
     );
   }
 }
