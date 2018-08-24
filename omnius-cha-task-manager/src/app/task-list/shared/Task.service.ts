@@ -1,18 +1,20 @@
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs/index';
+import { HttpClient, HttpEvent, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable, throwError  } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Task } from './task.model';
 import { catchError, map } from 'rxjs/internal/operators';
 
+@Injectable()
 export class TaskService {
   public tasksUrl = 'http://localhost:8080/task/';
 
   public constructor(private httpClient: HttpClient) {}
 
-  public getAll(params: HttpParams): Observable<Task[]> {
+  public getAll(): Observable<Task[]> {
     const url = `${this.tasksUrl}/list`;
     return this.httpClient.get<Task[]>(url).pipe(
       catchError(this.handleErrors),
-      map((response: Response) => this.responseToTasks(response))
+      map((tasks) => this.responseToTasks(tasks))
     );
   }
 
@@ -21,47 +23,59 @@ export class TaskService {
 
     return this.httpClient.get<Task>(url).pipe(
       catchError(this.handleErrors),
-      map((response: Response) => this.responseToTask(response))
+      map((res) => this.responseToTask(res))
     );
   }
 
-  public updateTask(task: Task): Observable<Boolean> {
+  public updateTask(task: Task): Observable<Task> {
     let url = `${this.tasksUrl}/${task.uuid}`;
     let body = JSON.stringify(task);
 
     return this.httpClient.post(url, body).pipe(
       catchError(this.handleErrors),
-      map((response: Response) => this.responseToTask(response))
+      map((task) => this.responseToTask(task))
     );
   }
 
-  public postponeTask(id: number): Observable<Boolean> {
+  public postponeTask(id: number): Observable<Task> {
     let url = `${this.tasksUrl}/${id}/postpone`;
 
-    return this.httpClient.post(url).pipe(
+    return this.httpClient.patch(url, {}).pipe(
       catchError(this.handleErrors),
-      map((response: Response) => this.responseToTask(response))
+      map((task) => this.responseToTask(task))
     );
   }
 
-  public resolveTask(ind: number): Observable<Task> {
+  public resolveTask(id: number): Observable<Task> {
     let url = `${this.tasksUrl}/resolve/${id}`;
-    return this.httpClient.post(url).pipe(
+    return this.httpClient.post(url, {}).pipe(
       catchError(this.handleErrors),
-      map((response: Response) => this.responseToTask(response))
+      map((task) => this.responseToTask(task))
     );
   }
 
-  private responseToTasks(response: Response): Task[] {
-    const collection = response.json().data as Array<any>;
+  private handleErrors(error: Response){
+    console.log("SOMETHING WENT WRONG => ", error);
+    return throwError(error);
+  }
+
+
+  private responseToTasks(response: any): Task[] {
+    const collection = response.json().results;
     const tasks: Task[] = [];
 
     collection.forEach(item => {
       const task = new Task(
-        item.id,
-        item.attributes.title,
-        item.attributes.description,
-        item.attributes.done
+        item.uuid,
+        item.createdat,
+        item.updatedat,
+        item.resolvedat,
+        item.postponedat,
+        item.postponedtime,
+        item.title,
+        item.description,
+        item.priority,
+        item.status
       );
 
       tasks.push(task);
@@ -70,12 +84,18 @@ export class TaskService {
     return tasks;
   }
 
-  private responseToTask(response: Response): Task {
+  private responseToTask(response: any): Task {
     return new Task(
-      response.json().data.id,
-      response.json().data.attributes.title,
-      response.json().data.attributes.description,
-      response.json().data.attributes.done
+      response.json().data.uuid,
+      response.json().data.createdat,
+      response.json().data.updatedat,
+      response.json().data.resolvedat,
+      response.json().data.postponedat,
+      response.json().data.postponedtime,
+      response.json().data.title,
+      response.json().data.description,
+      response.json().data.priority,
+      response.json().data.status
     );
   }
 }
