@@ -1,0 +1,17 @@
+[33mcommit 47cb11a84067db94eeeb549382b284addaaa1fa0[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Rodolfo Silva <rosilva@fitec.org.br>
+Date:   Fri Aug 24 20:24:40 2018 -0300
+
+    Adding Routes and Task Details component
+
+[33mcommit 8eb426f74b51abcc8c0e8e27da8f680dd3ea4130[m
+Author: Rodolfo Silva <rosilva@fitec.org.br>
+Date:   Fri Aug 24 11:42:47 2018 -0300
+
+    Updates on Task Service
+
+[33mcommit d3ed59f8e6f7f4de8f72704f90940436bd8de7db[m
+Author: Rodolfo Silva <rosilva@fitec.org.br>
+Date:   Fri Aug 24 11:31:43 2018 -0300
+
+    Application Service and Task Component Setup
