@@ -15,6 +15,7 @@ export class TaskDetailComponent implements OnInit {
   public form: FormGroup;
   public task: Task;
   public taskDoneOptions: Array<any>;
+  private id: string;
 
   constructor(
     private taskService: TaskService,
@@ -27,7 +28,7 @@ export class TaskDetailComponent implements OnInit {
       {value: true, text: 'Done'}
     ];
 
-
+    this.route.params.subscribe( params => this.id = params.id );
 
   }
 
@@ -46,12 +47,11 @@ export class TaskDetailComponent implements OnInit {
       description: [null]
     });
 
-    this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => this.taskService.getTaskById(+params.get('uuid')))
-    )
+    this.taskService.getTaskById(this.id)
       .subscribe(
-        task => this.setTask(task),
-        error => alert('Some Server Error, Try Again Later')
+        (t: Task) => {
+          this.setTask(t);
+        }
       );
   }
 
@@ -77,5 +77,4 @@ export class TaskDetailComponent implements OnInit {
         () => alert('Something wrong in the Server try again later.')
       );
   }
-
 }

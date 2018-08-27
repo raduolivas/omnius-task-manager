@@ -21,9 +21,9 @@ export class TaskListComponent implements OnInit {
       );
   }
 
-  public getTaskById(task: Task) {}
-  public updateTask(task: Task) {}
-  public postponeTask(task: Task) {}
-  public resolveTask(task: Task) {}
+  public resolveTask(task: Task) {
+    this.taskService.resolveTask(task.uuid)
+      .subscribe(msg => alert('Task was successfully resolved'));
+  }
 
 }
