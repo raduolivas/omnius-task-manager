@@ -1,66 +1,47 @@
-<h2 class="page-header">Task Details: {{ task.title }}</h2>
-
+<h2 class="page-header">Task Details</h2>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/"> < Tasks</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{form.value.uuid}}</li>
+  </ol>
+</nav>
 <form [formGroup]="form" (ngSubmit)="updateTask()">
   <div class="row">
-    <!-- taskTitle -->
-    <div class="form-group col-md-6 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('title')">
-      <label for="title" class="control-label">Title</label>
-      <input type="text" formControlName="title" id="title" class="form-control">
+  <!-- taskStatus -->
 
-      <div *ngIf="formUtils.showFieldError('title')" class="text-danger">
-        <div *ngIf="form.get('title').errors.required">Title is Required</div>
-        <div *ngIf="form.get('title').errors.minlength">Title need at least 2 characters</div>
-        <div *ngIf="form.get('title').errors.maxlength">Title require on Max 255 characters</div>
+
+    <div class="form-group col-md-12">
+      <div class="alert" [ngClass]="{'alert-warning' : form.value.status === 'NEW', 'alert-success': form.value.status === 'RESOLVED'}" role="alert">
+        {{form.value.status}}
       </div>
     </div>
 
-    <!-- Priority -->
-    <div class="form-group col-md-3 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('priority')">
-      <label for="deadline" class="control-label">Priority</label>
-      <input type="text" formControlName="deadline" id="deadline" class="form-control">
-    </div>
-
-    <!-- status -->
-    <div class="form-group col-md-3 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('status')">
-      <label for="done" class="control-label">Status</label>
-      <select class="form-control" id="done" formControlName="done">
-        <option *ngFor="let option of taskDoneOptions" [value]="option.value">{{ option.text }}</option>
-      </select>
-      <span class="glyphicon form-control-feedback" [ngClass]="formUtils.iconClassForErrorOrSuccess('status')"></span>
+    <!-- taskDueDate -->
+    <div class="form-group col-md-12" >
+      <div class="col ml-0 pl-0 pr-0">
+        <div class="counter">
+          <i class="far fa-calendar-alt fa-2x"></i>
+          <h2 class="timer count-title count-number" *ngIf="form.value.duedate" >{{form.value.duedate | timeago:live}}</h2>
+          <p class="count-text ">Due date</p>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- taskCreatedAt -->
-  <div class="form-group col-md-6 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('createdat')">
-    <label for="createdat" class="control-label">Created at</label>
-    <input type="text" formControlName="createdat" id="createdat" class="form-control">
-  </div>
-
-  <!-- taskUpdatedAt -->
-  <div class="form-group col-md-6 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('updatedat')">
-    <label for="updatedat" class="control-label">Updated at</label>
-    <input type="text" formControlName="updatedat" id="updatedat" class="form-control">
-  </div>
-
-  <!-- taskResolvedAt -->
-  <div class="form-group col-md-6 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('resolvedat')">
-    <label for="resolvedat" class="control-label">Resolved at</label>
-    <input type="text" formControlName="resolvedat" id="resolvedat" class="form-control">
-  </div>
-
-  <!-- taskPostponedAt -->
-  <div class="form-group col-md-6 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('postponedat')">
-    <label for="postponedat" class="control-label">Postponed At at</label>
-    <input type="text" formControlName="postponedat" id="postponedat" class="form-control">
-  </div>
-
-  <!-- taskPostponedTime -->
-  <div class="form-group col-md-6 has-feedback" [ngClass]="formUtils.fieldClassForErrorOrSuccess('postponedtime')">
-    <label for="postponedtime" class="control-label">Postponed At at</label>
-    <input type="text" formControlName="postponedtime" id="postponedtime" class="form-control">
-  </div>
-
   <div class="row">
+
+
+    <!-- taskTitle -->
+    <div class="form-group col-md-12">
+      <label for="title" class="control-label">Title</label>
+      <input type="text" formControlName="title" id="title" class="form-control">
+    </div>
+
+    <!-- taskPriority -->
+    <div class="form-group col-md-12">
+      <label for="priority" class="control-label">Priority</label>
+      <input type="text" formControlName="priority" id="priority" class="form-control">
+    </div>
+
     <!-- taskDescription -->
     <div class="form-group col-md-12">
       <label for="description" class="control-label">Description</label>
@@ -69,7 +50,6 @@
   </div>
 
   <button [disabled]="form.invalid" type="submit" class="btn btn-success">Update</button>
-  <button class="btn btn-default" type="button" (click)="goBack()">Back</button>
 
   <pre>{{ form.value | json }}</pre>
 </form>

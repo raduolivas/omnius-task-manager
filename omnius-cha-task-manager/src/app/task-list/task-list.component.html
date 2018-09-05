@@ -1,12 +1,17 @@
 <div class="container">
-  <div class="row">
-    <div class="card" style="width: 18rem;" *ngFor="let task of tasks">
-      <div class="card-body">
-        <h5 class="card-title">{{task.title}}</h5>
-        <p class="card-text">{{task.description}}</p>
-        <a [routerLink]="['/task', task.uuid, 'edit']" class="card-link">edit</a>
-        <a ngClick="resolveTask(task)" class="card-link">edit</a>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  <div class="row justify-content-center align-items-center">
+      <div class="card" style="width: 18rem;" *ngFor="let task of tasks | paginate: { itemsPerPage: 10, currentPage: p}">
+        <div class="card-body" [ngStyle]="{'background-color' :task.status == 'NEW' ? 'darkkhaki' : 'yellowgreen'}">
+          <h5 class="card-title">{{task.title}}</h5>
+          <p class="card-text">{{task.description}}</p>
+          <h5>Duedate: {{task.duedate | timeago}}</h5>
+          <h5>Priority: {{task.priority}}</h5>
+          <a [routerLink]="['/task', task.uuid, 'edit']" class="card-link">edit</a>
+          <a *ngIf="task.status == 'NEW'" (click)="resolveTask(task)" class="card-link">resolve</a>
+          <a *ngIf="task.status == 'NEW'" (click)="postponeTaskTask(task,$event)" class="card-link">postpone <span #1>1</span> | <span #10>10</span></a>
+        </div>
       </div>
-    </div>
   </div>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>

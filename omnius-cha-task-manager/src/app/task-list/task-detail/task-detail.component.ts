@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+
 import { TaskService } from '../shared/task.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { switchMap } from 'rxjs/internal/operators';
 import { Task } from '../shared/task.model';
 
 @Component({
@@ -20,7 +20,6 @@ export class TaskDetailComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     private route: ActivatedRoute,
-    private location: Location,
     private formBuilder: FormBuilder
   ) {
     this.taskDoneOptions = [
@@ -44,9 +43,13 @@ export class TaskDetailComponent implements OnInit {
       postponedat: [null],
       postponedtime: [null],
       title: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
-      description: [null]
+      description: [null],
+      duedate: [null]
     });
+    this.loadTask();
+  }
 
+  loadTask() {
     this.taskService.getTaskById(this.id)
       .subscribe(
         (t: Task) => {
@@ -60,10 +63,6 @@ export class TaskDetailComponent implements OnInit {
     this.form.patchValue(task);
   }
 
-  public goBack() {
-    this.location.back();
-  }
-
   public updateTask() {
     this.task.title = this.form.get('title').value;
     this.task.priority = this.form.get('priority').value;
@@ -73,8 +72,8 @@ export class TaskDetailComponent implements OnInit {
 
     this.taskService.updateTask(this.task)
       .subscribe(
-        () => alert('Task updated successfully!'),
-        () => alert('Something wrong in the Server try again later.')
+        data => {this.loadTask(); alert('Task has been updated')},
+        msg => alert('Something wrong in the Server try again later.')
       );
   }
 }

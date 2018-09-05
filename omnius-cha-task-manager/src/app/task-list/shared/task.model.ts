@@ -10,6 +10,7 @@ export class Task {
     public resolvedat: number,
     public postponedat: number,
     public postponedtime: number,
+    public duedate: number
 
-  ) { }
+  ) {}
 }

@@ -1,7 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+
+/**third party dependencies**/
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TimeagoModule } from 'ngx-timeago';
+import { OrderModule } from 'ngx-order-pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './core/header/header.component';
@@ -22,7 +28,11 @@ import { TaskService } from './task-list/shared/task.service';
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule,
+    TimeagoModule.forRoot(),
+    OrderModule,
+    NgxPaginationModule
   ],
   providers: [TaskService],
   bootstrap: [AppComponent]
